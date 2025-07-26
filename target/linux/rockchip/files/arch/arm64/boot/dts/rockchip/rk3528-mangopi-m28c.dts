@@ -45,19 +45,17 @@
 		shutdown-gpios = <&gpio4 RK_PB1 GPIO_ACTIVE_HIGH>;
 	};
 
-	pwm_fan: pwm-fan {
+	fan: pwm-fan {
 		compatible = "pwm-fan";
-		pwms = <&pwm3 0 50000 0>;  
-		cooling-levels = <0 50 100 150 200 255>; // PWM 占空比等级
-		#cooling-cells = <2>;
+		pwms = <&pwm3 0 50000 0>; 
+		#cooling-cells = <2>; 
+		cooling-levels = <0 20 50 75 100 120 150 180 200 255>;
+		
 	};
 };
 
 &pwm3 {
 	status = "okay";
-	/* 添加关键引脚配置 */
-	pinctrl-names = "default";
-	pinctrl-0 = <&pwm3m0_pins>;  // 使用正确的 pinctrl 配置
 };
 
 &sdhci {
@@ -74,13 +72,4 @@
 
 &vccio_sd {
 	status = "disabled";
-};
-
-&soc_thermal {
-    cooling-maps {
-        map0 {
-            trip = <&target>;  // 使用存在的 target 节点
-            cooling-device = <&pwm_fan 1 5>; // 1-5 级调速
-        };
-    };
 };
